@@ -24,18 +24,15 @@ public:
 
 private:
   void HandleImage(sensor_msgs::msg::Image::ConstSharedPtr msg);
+  void UpdateCameraInfo(sensor_msgs::msg::CameraInfo::ConstSharedPtr msg);
 
-  // private:
-  //   void ShowImage(const sensor_msgs::msg::CameraInfo& msg) const
-  //   {
-  //     RCLCPP_INFO(this->get_logger(), "got height = %d, width = %d", msg.height, msg.width);
-  //   }
-  //   rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr subscription_;
-
-  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscription_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscription_image_raw_;
+  rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr subscription_camera_info_;
 
   std::vector<int> markerIds;
   std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
   cv::Ptr<cv::aruco::DetectorParameters> parameters = cv::aruco::DetectorParameters::create();
   cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+
+  std::shared_ptr<cv::Mat> camera_matrix, dist_coeffs;
 };
